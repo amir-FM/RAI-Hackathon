@@ -4,6 +4,9 @@ from typing import List, Optional
 from dotenv import load_dotenv
 import os
 import streamlit as st
+import plotly.express as px
+from streamlit_lightweight_charts import renderLightweightCharts
+import streamlit_lightweight_charts.dataSamples as data
 
 load_dotenv()
 
@@ -197,7 +200,7 @@ class Main:
         self.cheltuieli.salary = self.agents.parsed_data.user.totalSalary.amount
         pass
 
-    def chart(lables, values):
+    def chart(self, labels, values):
         # labels = ['laptop', 'pahare', 'fifa', 'gantere', 'banane', 'mouse', 'masina', 'haine', 'spritz']
         # values = [10, 10, 10, 10, 10, 10, 10, 10, 20]
 
@@ -245,8 +248,6 @@ class Main:
 
     # @staticmethod
     def initCategs(self):
-        if self.isDone == 1:
-            return
         for tx in self.agents.parsed_data.user.transactions.booked:
                 category = None
                 while True:
@@ -286,7 +287,7 @@ class Main:
             self.cheltuieli.TransportPercentage,
             self.cheltuieli.freePercentage
         ]
-        chart(field_names, field_values)
+        self.chart(field_names, field_values)
         return field_names, field_values
 
 # print(percentagesParser(cheltuieli))
@@ -307,7 +308,7 @@ class Main:
             self.price = (float)(output)
             print(output)
             print(f"free = {self.cheltuieli.free}")
-            print(f"{prompt}: Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)}")
+            return output + " " + f"{prompt}: Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)}"
             print(self.price)
             self.exists_obiect = True
 

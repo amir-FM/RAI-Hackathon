@@ -81,6 +81,7 @@ def stream_chat(model, messages):
         response = resp
         response_placeholder.write(response)
         # chart()
+        st.session_state.bots.percentageParser()
         # for r in resp:
         #     print(r)
         #     response += r#.delta
