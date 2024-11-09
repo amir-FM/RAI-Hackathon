@@ -68,8 +68,7 @@ class Spendings:
             self.freePercentage = (self.free / self.salary) * 100
 
     def percentages_str(self):
-        return (f"Healt\
-                hcare: {self.HealthcarePercentage:.2f}%\n"
+        return (f"Healthcare: {self.HealthcarePercentage:.2f}%\n"
                 f"Education: {self.EducationPercentage:.2f}%\n"
                 f"Food and Drinks: {self.FoodAndDrinksPercentage:.2f}%\n"
                 f"Restaurants or Coffee Shops: {self.RestaurantsOrCoffeShopsPercentage:.2f}%\n"
