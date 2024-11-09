@@ -2,7 +2,6 @@ import json
 from dataclasses import dataclass
 from typing import List, Optional
 
-from Agents import Agents
 
 # Define data classes for the JSON structure
 @dataclass
@@ -165,7 +164,7 @@ class Agents:
         model="gpt-4o",
         messages=[
                 {"role": "system", "content": """You are a helpful assistant that searches for the medium price of an given object, paying attetion to the details given by the user."""},
-                {"role": "user", "content": f"Give me just the medium price of {obiect}, one number in euros and the number should be like this: 1000,0"}
+                {"role": "user", "content": f"Give me just the medium price of {obiect}, one number in euros and the number should be like this: 1000.0"}
             ],
         max_tokens=400,
         temperature=0.2,
@@ -174,21 +173,68 @@ class Agents:
 
 
     def timeUntillPurchase(self, needed, monthly_savings):
-        if(needed / 12 * monthly_savings < 1):
+        if((needed /( 12 * monthly_savings)) < 1):
             return "{:.2f}".format(needed / monthly_savings) + " months"
         return "{:.2f}".format(needed/(12 * monthly_savings)) + " years"
     # se poate expanda pe luni (telefoane )
 
+import streamlit as st
+import plotly.express as px
 
 class Main:
     def __init__(self):
         self.agents = Agents()
-
+        self.price = 0
         self.cheltuieli = Spendings()
+        self.exists_obiect = False
 
         self.cheltuieli.salary = self.agents.parsed_data.user.totalSalary.amount
         pass
 
+    def chart():
+        labels = ['laptop', 'pahare', 'fifa', 'gantere', 'banane', 'mouse', 'masina', 'haine', 'spritz']
+        values = [10, 10, 10, 10, 10, 10, 10, 10, 20]
+
+        # Different shades of yellow for the pie chart
+        yellow_shades = [
+            "#FFFFE0",  # Light Yellow
+            "#FFF700",  # Lemon Yellow
+            "#FFD700",  # Gold
+            "#FFAE42",  # Yellow Orange
+            "#FFEF00",  # Canary Yellow
+            "#F8D700",  # Daffodil Yellow
+            "#DAA520",  # Goldenrod
+            "#FAFAD2",  # Light Goldenrod Yellow
+            "#FFDD00"   # Bright Yellow
+        ]
+
+        # Creating a Plotly pie chart with different shades of yellow
+        fig = px.pie(
+            names=labels,
+            values=values,
+            title='Fruit Distribution',
+            color_discrete_sequence=yellow_shades,  # Apply the yellow shades
+            hole=0.3  # To create a donut chart, set this between 0 and 1
+        )
+
+        # Update layout for legend and font style
+        fig.update_layout(
+            legend=dict(
+                font=dict(
+                    family="yellow",  # You can change the font family here
+                    size=18,  # Set the font size
+                    color="white"  # Set the font color if needed
+                ),
+                title="Spendings",  # You can also set a title for the legend
+                title_font=dict(
+                    size=20,  # Font size of the legend title
+                    family="yellow",  # Font family for the legend title
+                )
+            )
+        )
+
+        # Display the interactive pie chart
+        st.plotly_chart(fig)
 
 
     # @staticmethod
@@ -204,26 +250,42 @@ class Main:
                 self.cheltuieli.add_to_field(self.agents.get_string_between_quotes(category), (float)(tx.transactionAmount.amount))
         self.cheltuieli.free = self.cheltuieli.salary - self.cheltuieli.totalSpent
         print("done categorizing")
-        self.cheltuieli.percentages_str()
+        self.cheltuieli.update_percentages()
+
+
+    def percentageParser(self):
+        field_names = [
+            'HealthcarePercentage',
+            'EducationPercentage',
+            'FoodAndDrinksPercentage',
+            'RestaurantsOrCoffeShopsPercentage',
+            'BillsPercentage',
+            'EntertainmentPercentage',
+            'ShoppingPercentage',
+            'TransportPercentage',
+            'freePercentage'
+        ]
+
+        # Create a list of corresponding values
+        field_values = [
+            self.cheltuieli.HealthcarePercentage,
+            self.cheltuieli.EducationPercentage,
+            self.cheltuieli.FoodAndDrinksPercentage,
+            self.cheltuieli.RestaurantsOrCoffeShopsPercentage,
+            self.cheltuieli.BillsPercentage,
+            self.cheltuieli.EntertainmentPercentage,
+            self.cheltuieli.ShoppingPercentage,
+            self.cheltuieli.TransportPercentage,
+            self.cheltuieli.freePercentage
+        ]
+
+        return field_names, field_values
+
+# print(percentagesParser(cheltuieli))
 
 
     # @staticmethod
     def run(self, input_text):
-
-        # agents = Agents()
-
-        # cheltuieli = Spendings()
-
-        # cheltuieli.salary = agents.parsed_data.user.totalSalary.amount
-
-
-        # prompt = "i want to be more economic"
-        prompt = "i need more money"
-        # prompt = "where do my money go"
-        # prompt = "i am an unicorn"
-
-    
-        # prompt = input()
         prompt = input_text
         option = self.agents.Master(prompt)
         print(option)
@@ -234,22 +296,40 @@ class Main:
             self.agents.mockWhereCanISave()
         elif option[0] == "3":
             output = self.agents.wishes(prompt)
-            price_match = re.search(r'\d{1,3}(?:,\d{3})*(?:\.\d+)?', output)
-            if price_match:
-                price = float(price_match.group().replace(',', ''))
+            self.price = (float)(output)
             print(output)
-            print(f"Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(price, self.cheltuieli.free)}")
-            print(price)
+            print(f"free = {self.cheltuieli.free}")
+            print(f"{prompt}: Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)}")
+            print(self.price)
+            self.exists_obiect = True
 
         elif option[0] == "4":
             print("I could not make any sense of your input")
             pass
+        elif option[0] == "5":
+
+
+        print(self.percentageParser())
+
+    def getHowMuchMorePercentage(self, timp_vrut):
+        economii_luna_old = self.cheltuieli.free
+        timp_initial = self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)
+
+        economii_luna_new = (timp_vrut * economii_luna_old) / timp_initial
+
+        percentage_economii_luna_old = economii_luna_old / self.cheltuieli.salary
+
+        percentage_economii_luna_new = economii_luna_new / self.cheltuieli.salary
+
+
+
+        return percentage_economii_luna_new - percentage_economii_luna_old
 
 
 
 main = Main()
 main.initCategs()
-main.run()
+main.run("i want to buy a dior saddlebag")
 
 # print(cheltuieli.free)
 
