@@ -121,27 +121,28 @@ cheltuieli = Spendings()
 
 cheltuieli.salary = parsed_data.user.totalSalary.amount
 
-
-for tx in parsed_data.user.transactions.booked:
-    category = None
-    while True:
-        category = classify_transaction(tx.creditorName, client)
-        if(get_string_between_quotes(category) != None):
-            break
-    print(f"Transaction: {tx.creditorName} -> Category: {get_string_between_quotes(category)}")
+def categorise():
+    buff = ""
+    for tx in parsed_data.user.transactions.booked:
+        category = None
+        while True:
+            category = classify_transaction(tx.creditorName, client)
+            if(get_string_between_quotes(category) != None):
+                break
+        buff += f"Transaction: {tx.creditorName} -> Category: {get_string_between_quotes(category)}\n\n"
 
     cheltuieli.add_to_field(get_string_between_quotes(category), (float)(tx.transactionAmount.amount))
 
 
-cheltuieli.free = cheltuieli.salary - cheltuieli.totalSpent
+    cheltuieli.free = cheltuieli.salary - cheltuieli.totalSpent
 
-print(cheltuieli.free)
+    cheltuieli.update_percentages()
 
+    return buff
 
-print(cheltuieli.str())
-cheltuieli.update_percentages()
-print(cheltuieli.percentages_str())
-
+# print(cheltuieli.free)
+# print(cheltuieli.str())
+# print(cheltuieli.percentages_str())
 
 def whereCanISave(cheltuieli_percentages, client):
     response = client.chat.completions.create(

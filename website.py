@@ -5,6 +5,7 @@ from llama_index.core.llms import ChatMessage
 import logging
 import time
 from llama_index.llms.ollama import Ollama
+from main import *
 
 logging.basicConfig(level=logging.INFO)
 
@@ -13,14 +14,17 @@ if 'messages' not in st.session_state:
 
 def stream_chat(model, messages):
     try:
-        llm = Ollama(model=model, request_timeout=120.0)
-        resp = llm.stream_chat(messages)
+        # llm = Ollama(model=model, request_timeout=120.0)
+        resp = categorise()#llm.stream_chat(messages)
         response = ""
         response_placeholder = st.empty()
-        for r in resp:
-            response += r.delta
-            response_placeholder.write(response)
-        logging.info(f"Model: {model}, Messages: {messages}, Response: {response}")
+        response = resp
+        response_placeholder.write(response)
+        # for r in resp:
+        #     print(r)
+        #     response += r#.delta
+        #     response_placeholder.write(response)
+        # logging.info(f"Model: {model}, Messages: {messages}, Response: {response}")
         return response
     except Exception as e:
         logging.error(f"Error during streaming: {str(e)}")
