@@ -2,6 +2,8 @@ import json
 from dataclasses import dataclass
 from typing import List, Optional
 
+from Agents import Agents
+
 # Define data classes for the JSON structure
 @dataclass
 class Amount:
@@ -70,95 +72,189 @@ def parse_json_from_file(file_path: str) -> Root:
         )
     )
 
-# Path to your JSON file
-file_path = 'input.json'
-
-# Parse the JSON file
-parsed_data = parse_json_from_file(file_path)
-
 
 
 import os
 from openai import AzureOpenAI
-
-
-
-client = AzureOpenAI(
-  azure_endpoint = "https://rbro-openai-hackatlon.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-08-01-preview", # insert the provided endpoint here 
-api_key = os.getenv("OPENAI_API_KEY"), # insert the provided api key here  
-  api_version="2024-08-01-preview"
-)
-
 import re
-
-def get_string_between_quotes(text):
-    # Use regex to find content between single quotes
-    match = re.search(r"'(.*?)'", text)
-    if match:
-        return match.group(1)  # Return the content between the quotes
-    return None  # Return None if no match is found
-
-def classify_transaction(transaction_description, client):
-    response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[
-            {"role": "system", "content": "You are a helpful assistant that classifies transactions."},
-            {"role": "user", "content": f"""Classify the following transaction into one
-              of these categories: 'Healthcare', 'Education','FoodAndDrinks', 
-             'RestaurantsOrCoffeShops 'Shopping', 'Transport', 'Bills', 'Transfer',
-              'Entertainment'.\n\nTransaction: {transaction_description}"""}
-        ],
-        max_tokens=400,
-        temperature=0.2,
-)
-    return response.choices[0].message.content
-
 from Spendings import Spendings
 
 
-cheltuieli = Spendings()
 
-cheltuieli.salary = parsed_data.user.totalSalary.amount
+class Agents:
+# Path to your JSON file
+    def __init__(self):
+    
+        self.file_path = 'input.json'
 
+        # Parse the JSON file
+        self.parsed_data = parse_json_from_file(self.file_path)
 
-for tx in parsed_data.user.transactions.booked:
-    category = None
-    while True:
-        category = classify_transaction(tx.creditorName, client)
-        if(get_string_between_quotes(category) != None):
-            break
-    print(f"Transaction: {tx.creditorName} -> Category: {get_string_between_quotes(category)}")
-
-    cheltuieli.add_to_field(get_string_between_quotes(category), (float)(tx.transactionAmount.amount))
-
-
-cheltuieli.free = cheltuieli.salary - cheltuieli.totalSpent
-
-print(cheltuieli.free)
+        self.client = AzureOpenAI(
+        azure_endpoint = "https://rbro-openai-hackatlon.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-08-01-preview", # insert the provided endpoint here 
+        api_key = os.getenv("OPENAI_API_KEY"), # insert the provided api key here  
+        api_version="2024-08-01-preview"
+        )
 
 
-print(cheltuieli.str())
-cheltuieli.update_percentages()
-print(cheltuieli.percentages_str())
+    def get_string_between_quotes(self, text):
+        # Use regex to find content between single quotes
+        match = re.search(r"'(.*?)'", text)
+        if match:
+            return match.group(1)  # Return the content between the quotes
+        return None  # Return None if no match is found
+
+    def classify_transaction(self, transaction_description, client):
+        response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": "You are a helpful assistant that classifies transactions."},
+                {"role": "user", "content": f"""Classify the following transaction into one
+                of these categories: 'Healthcare', 'Education','FoodAndDrinks', 
+                'RestaurantsOrCoffeShops 'Shopping', 'Transport', 'Bills', 'Transfer',
+                'Entertainment'.\n\nTransaction: {transaction_description}"""}
+            ],
+            max_tokens=400,
+            temperature=0.2,
+    )
+        return response.choices[0].message.content
 
 
-def whereCanISave(cheltuieli_percentages, client):
-    response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[
-            {"role": "system", "content": """You are a helpful assistant that will analyze 
-             the spending habits of a person and based on them you will give advice on 
-             where they can cut spending. You have to keep in mind that even though 
-             some percentages may look high (for example bills represets half where the
-             money goes), maybe the person can t live without that expense"""},
-            {"role": "user", "content": f"""Where can 
-             the following user save some money. Give the output in the following format as a list:
-             [Field : percentage that can be saved]\n\Spendings: {cheltuieli_percentages}"""}
-        ],
-        max_tokens=1000,
+
+    def whereCanISave(self, cheltuieli_percentages, client):
+        response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that will analyze 
+                the spending habits of a person and based on them you will give advice on 
+                where they can cut spending. You have to keep in mind that even though 
+                some percentages may look high (for example bills represets half where the
+                money goes), maybe the person can t live without that expense"""},
+                {"role": "user", "content": f"""Where can 
+                the following user save some money. Give the output in the following format as a list:
+                [Field : percentage that can be saved]\n\Spendings: {cheltuieli_percentages}"""}
+            ],
+            max_tokens=1000,
+            temperature=0.2,
+    )
+        return response.choices[0].message.content
+
+    # print(whereCanISave(cheltuieli.percentages_str(), client))
+    def mockWhereCanISave(self):
+        print("haiddeeeeeee")
+
+    def Master(self, text_input):
+        response = self.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that will analyze 
+                a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of hos spending habbits)
+                 ,  2. How can i save money (this means that the user wnts to have more money), 3. I want to buy something / i have a material wish
+                 4. None of the above. 
+                 Return just the prompt with the index included."""},
+                {"role": "user", "content": f"""To which option does the prompt belong {text_input}"""}
+            ],
+            max_tokens=1000,
+            temperature=0.2,
+    )
+        return response.choices[0].message.content
+    
+
+    def wishes(self, obiect):
+        response = self.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that searches for the medium price of an given object, paying attetion to the details given by the user."""},
+                {"role": "user", "content": f"Give me just the medium price of {obiect}, one number in euros and the number should be like this: 1000,0"}
+            ],
+        max_tokens=400,
         temperature=0.2,
-)
-    return response.choices[0].message.content
+    )
+        return response.choices[0].message.content
 
-print(whereCanISave(cheltuieli.percentages_str(), client))
+
+    def timeUntillPurchase(self, needed, monthly_savings):
+        if(needed / 12 * monthly_savings < 1):
+            return "{:.2f}".format(needed / monthly_savings) + " months"
+        return "{:.2f}".format(needed/(12 * monthly_savings)) + " years"
+    # se poate expanda pe luni (telefoane )
+
+
+class Main:
+    def __init__(self):
+        self.agents = Agents()
+
+        self.cheltuieli = Spendings()
+
+        self.cheltuieli.salary = self.agents.parsed_data.user.totalSalary.amount
+        pass
+
+
+
+    # @staticmethod
+    def initCategs(self):
+        for tx in self.agents.parsed_data.user.transactions.booked:
+                category = None
+                while True:
+                    category = self.agents.classify_transaction(tx.creditorName, self.agents.client)
+                    if(self.agents.get_string_between_quotes(category) != None):
+                        break
+                print(f"Transaction: {tx.creditorName} -> Category: {self.agents.get_string_between_quotes(category)}")
+
+                self.cheltuieli.add_to_field(self.agents.get_string_between_quotes(category), (float)(tx.transactionAmount.amount))
+        self.cheltuieli.free = self.cheltuieli.salary - self.cheltuieli.totalSpent
+        print("done categorizing")
+        self.cheltuieli.percentages_str()
+
+
+    # @staticmethod
+    def run(self, input_text):
+
+        # agents = Agents()
+
+        # cheltuieli = Spendings()
+
+        # cheltuieli.salary = agents.parsed_data.user.totalSalary.amount
+
+
+        # prompt = "i want to be more economic"
+        prompt = "i need more money"
+        # prompt = "where do my money go"
+        # prompt = "i am an unicorn"
+
+    
+        # prompt = input()
+        prompt = input_text
+        option = self.agents.Master(prompt)
+        print(option)
+
+        if option[0] == "1":
+            pass
+        elif option[0] == "2":
+            self.agents.mockWhereCanISave()
+        elif option[0] == "3":
+            output = self.agents.wishes(prompt)
+            price_match = re.search(r'\d{1,3}(?:,\d{3})*(?:\.\d+)?', output)
+            if price_match:
+                price = float(price_match.group().replace(',', ''))
+            print(output)
+            print(f"Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(price, self.cheltuieli.free)}")
+            print(price)
+
+        elif option[0] == "4":
+            print("I could not make any sense of your input")
+            pass
+
+
+
+main = Main()
+main.initCategs()
+main.run()
+
+# print(cheltuieli.free)
+
+
+# print(cheltuieli.str())
+# cheltuieli.update_percentages()
+# print(cheltuieli.percentages_str())
 
