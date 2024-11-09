@@ -5,6 +5,8 @@ from llama_index.core.llms import ChatMessage
 import logging
 import time
 from llama_index.llms.ollama import Ollama
+from streamlit_lightweight_charts import renderLightweightCharts
+import streamlit_lightweight_charts.dataSamples as data
 
 logging.basicConfig(level=logging.INFO)
 
@@ -30,9 +32,11 @@ def main():
     st.title("Chat with LLMs Models")
     logging.info("App started")
 
+    # Select a model
     model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
     logging.info(f"Model selected: {model}")
 
+    # Chat functionality
     if prompt := st.chat_input("Your question"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         logging.info(f"User input: {prompt}")
@@ -60,6 +64,99 @@ def main():
                         st.session_state.messages.append({"role": "assistant", "content": str(e)})
                         st.error("An error occurred while generating the response.")
                         logging.error(f"Error: {str(e)}")
+
+    # Section for displaying the chart
+    st.subheader("Overlaid Series with Markers")
+    
+    # Define the chart options
+    overlaidAreaSeriesOptions = {
+        "height": 400,
+        "rightPriceScale": {
+            "scaleMargins": {
+                "top": 0.1,
+                "bottom": 0.1,
+            },
+            "mode": 2,
+            "borderColor": 'rgba(197, 203, 206, 0.4)',
+        },
+        "timeScale": {
+            "borderColor": 'rgba(197, 203, 206, 0.4)',
+        },
+        "layout": {
+            "background": {
+                "type": 'solid',
+                "color": '#100841'
+            },
+            "textColor": '#ffffff',
+        },
+        "grid": {
+            "vertLines": {
+                "color": 'rgba(197, 203, 206, 0.4)',
+                "style": 1,
+            },
+            "horzLines": {
+                "color": 'rgba(197, 203, 206, 0.4)',
+                "style": 1,
+            }
+        }
+    }
+
+    seriesOverlaidChart = [
+        {
+            "type": 'Area',
+            "data": data.seriesMultipleChartArea01,
+            "options": {
+                "topColor": 'rgba(255, 192, 0, 0.7)',
+                "bottomColor": 'rgba(255, 192, 0, 0.3)',
+                "lineColor": 'rgba(255, 192, 0, 1)',
+                "lineWidth": 2,
+            },
+            "markers": [
+                {
+                    "time": '2019-04-08',
+                    "position": 'aboveBar',
+                    "color": 'rgba(255, 192, 0, 1)',
+                    "shape": 'arrowDown',
+                    "text": 'H',
+                    "size": 3
+                },
+                {
+                    "time": '2019-05-13',
+                    "position": 'belowBar',
+                    "color": 'rgba(255, 192, 0, 1)',
+                    "shape": 'arrowUp',
+                    "text": 'L',
+                    "size": 3
+                },
+            ]
+        },
+        {
+            "type": 'Area',
+            "data": data.seriesMultipleChartArea02,
+            "options": {
+                "topColor": 'rgba(67, 83, 254, 0.7)',
+                "bottomColor": 'rgba(67, 83, 254, 0.3)',
+                "lineColor": 'rgba(67, 83, 254, 1)',
+                "lineWidth": 2,
+            },
+            "markers": [
+                {
+                    "time": '2019-05-03',
+                    "position": 'aboveBar',
+                    "color": 'rgba(67, 83, 254, 1)',
+                    "shape": 'arrowDown',
+                    "text": 'PEAK',
+                    "size": 3
+                },
+            ]
+        }
+    ]
+
+    # Render the chart using Streamlit Lightweight Charts
+    renderLightweightCharts([{
+        "chart": overlaidAreaSeriesOptions,
+        "series": seriesOverlaidChart
+    }], 'overlaid')
 
 if __name__ == "__main__":
     main()
