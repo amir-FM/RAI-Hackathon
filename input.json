@@ -198,7 +198,7 @@
             "amount": 400.00,
             "currency": "EUR"
           },
-          "creditorName": "Taxi",
+          "creditorName": "OMV",
           "remittanceInformationUnstructured": "Transportation"
         },
         {
@@ -211,7 +211,7 @@
             "amount": 120.00,
             "currency": "EUR"
           },
-          "creditorName": "Restaurantul Local SRL",
+          "creditorName": "Hanul lui Manuc",
           "remittanceInformationUnstructured": "Dining Out"
         }
       ],

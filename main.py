@@ -80,12 +80,13 @@ parsed_data = parse_json_from_file(file_path)
 
 import os
 from openai import AzureOpenAI
+from dotenv import load_dotenv
 
-
+load_dotenv()
 
 client = AzureOpenAI(
   azure_endpoint = "https://rbro-openai-hackatlon.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-08-01-preview", # insert the provided endpoint here 
-api_key = os.getenv("OPENAI_API_KEY"), # insert the provided api key here  
+  api_key = os.getenv("OPENAI_API_KEY"), # insert the provided api key here
   api_version="2024-08-01-preview"
 )
 
@@ -153,7 +154,7 @@ def whereCanISave(cheltuieli_percentages, client):
              money goes), maybe the person can t live without that expense"""},
             {"role": "user", "content": f"""Where can 
              the following user save some money. Give the output in the following format as a list:
-             [Field : percentage that can be saved]\n\Spendings: {cheltuieli_percentages}"""}
+             [Field : percentage that can be saved]\nSpendings: {cheltuieli_percentages}"""}
         ],
         max_tokens=1000,
         temperature=0.2,
@@ -162,3 +163,32 @@ def whereCanISave(cheltuieli_percentages, client):
 
 print(whereCanISave(cheltuieli.percentages_str(), client))
 
+def percentagesParser(cheltuieli):
+    field_names = [
+        'HealthcarePercentage',
+        'EducationPercentage',
+        'FoodAndDrinksPercentage',
+        'RestaurantsOrCoffeShopsPercentage',
+        'BillsPercentage',
+        'EntertainmentPercentage',
+        'ShoppingPercentage',
+        'TransportPercentage',
+        'freePercentage'
+    ]
+
+    # Create a list of corresponding values
+    field_values = [
+        cheltuieli.HealthcarePercentage,
+        cheltuieli.EducationPercentage,
+        cheltuieli.FoodAndDrinksPercentage,
+        cheltuieli.RestaurantsOrCoffeShopsPercentage,
+        cheltuieli.BillsPercentage,
+        cheltuieli.EntertainmentPercentage,
+        cheltuieli.ShoppingPercentage,
+        cheltuieli.TransportPercentage,
+        cheltuieli.freePercentage
+    ]
+
+    return field_names, field_values
+
+print(percentagesParser(cheltuieli))
