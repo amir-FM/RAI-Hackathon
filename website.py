@@ -7,6 +7,8 @@ import time
 from llama_index.llms.ollama import Ollama
 from streamlit_lightweight_charts import renderLightweightCharts
 import streamlit_lightweight_charts.dataSamples as data
+import streamlit as st
+import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,6 +34,21 @@ def main():
     st.title("Chat with LLMs Models")
     logging.info("App started")
 
+    # Streamlit app title
+    st.title("Pie Chart Example")
+
+    # Sample data for the pie chart
+    labels = ['Apples', 'Bananas', 'Cherries', 'Dates']
+    sizes = [25, 35, 20, 20]  # Percentages
+    colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+
+    # Create a pie chart using matplotlib
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')  # Equal aspect ratio ensures the pie is circular.
+
+    # Display the pie chart in Streamlit
+    st.pyplot(fig)
     # Select a model
     model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
     logging.info(f"Model selected: {model}")
