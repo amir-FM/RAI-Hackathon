@@ -30,6 +30,23 @@ def main():
     st.title("Chat with LLMs Models")
     logging.info("App started")
 
+    st.markdown(
+    """
+    <style>
+    .st-emotion-cache-6qob1r{
+
+        background-color: white;  /* Change this to your desired color */
+    }
+    .st-emotion-cache-1dp5vir{
+        background-color: yellow;
+        background-image: none;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+
+    st.sidebar.image("logo.svg")
     model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
     logging.info(f"Model selected: {model}")
 
