@@ -27,7 +27,7 @@ def stream_chat(model, messages):
         raise e
 
 def main():
-    st.title("Chat with LLMs Models")
+    st.title("Your money is lazy, let's put it to work")
     logging.info("App started")
 
     st.markdown(
