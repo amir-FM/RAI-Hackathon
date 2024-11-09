@@ -13,7 +13,6 @@ class Spendings:
         self.FoodAndDrinks = 0
         self.RestaurantsOrCoffeShops = 0
         self.Bills = 0
-        self.Transfers = 0
         self.Entertainment = 0
         self.Shopping = 0
         self.Transport = 0
@@ -24,10 +23,10 @@ class Spendings:
         self.FoodAndDrinksPercentage = 0
         self.RestaurantsOrCoffeShopsPercentage = 0
         self.BillsPercentage = 0
-        self.TransfersPercentage = 0
         self.EntertainmentPercentage = 0
         self.ShoppingPercentage = 0
         self.TransportPercentage = 0
+        self.freePercentage = 0
 
 
 
@@ -50,7 +49,6 @@ class Spendings:
                 f"Food and Drinks: {self.FoodAndDrinks}\n"
                 f"Restaurants or Coffee Shops: {self.RestaurantsOrCoffeShops}\n"
                 f"Bills: {self.Bills}\n"
-                f"Transfers: {self.Transfers}\n"
                 f"Entertainment: {self.Entertainment}\n"
                 f"Shopping: {self.Shopping}\n"
                 f"Transport: {self.Transport}")
@@ -64,18 +62,20 @@ class Spendings:
             self.FoodAndDrinksPercentage = (self.FoodAndDrinks / self.salary) * 100
             self.RestaurantsOrCoffeShopsPercentage = (self.RestaurantsOrCoffeShops / self.salary) * 100
             self.BillsPercentage = (self.Bills / self.salary) * 100
-            self.TransfersPercentage = (self.Transfers / self.salary) * 100
             self.EntertainmentPercentage = (self.Entertainment / self.salary) * 100
             self.ShoppingPercentage = (self.Shopping / self.salary) * 100
             self.TransportPercentage = (self.Transport / self.salary) * 100
+            self.freePercentage = (self.free / self.salary) * 100
 
     def percentages_str(self):
-        return (f"Healthcare: {self.HealthcarePercentage:.2f}%\n"
+        return (f"Healt\
+                hcare: {self.HealthcarePercentage:.2f}%\n"
                 f"Education: {self.EducationPercentage:.2f}%\n"
                 f"Food and Drinks: {self.FoodAndDrinksPercentage:.2f}%\n"
                 f"Restaurants or Coffee Shops: {self.RestaurantsOrCoffeShopsPercentage:.2f}%\n"
                 f"Bills: {self.BillsPercentage:.2f}%\n"
-                f"Transfers: {self.TransfersPercentage:.2f}%\n"
                 f"Entertainment: {self.EntertainmentPercentage:.2f}%\n"
                 f"Shopping: {self.ShoppingPercentage:.2f}%\n"
-                f"Transport: {self.TransportPercentage:.2f}%")
+                f"Transport: {self.TransportPercentage:.2f}%\n"
+                f"Economies: {self.freePercentage:.2f}%")
+    

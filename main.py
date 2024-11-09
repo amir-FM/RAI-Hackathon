@@ -103,7 +103,10 @@ def classify_transaction(transaction_description, client):
     model="gpt-4o",
     messages=[
             {"role": "system", "content": "You are a helpful assistant that classifies transactions."},
-            {"role": "user", "content": f"Classify the following transaction into one of these categories: 'Healthcare', 'Education','FoodAndDrinks', 'RestaurantsOrCoffeShops 'Shopping', 'Transport', 'Bills', 'Transfer', 'Entertainment'.\n\nTransaction: {transaction_description}"}
+            {"role": "user", "content": f"""Classify the following transaction into one
+              of these categories: 'Healthcare', 'Education','FoodAndDrinks', 
+             'RestaurantsOrCoffeShops 'Shopping', 'Transport', 'Bills', 'Transfer',
+              'Entertainment'.\n\nTransaction: {transaction_description}"""}
         ],
         max_tokens=400,
         temperature=0.2,
@@ -125,7 +128,6 @@ for tx in parsed_data.user.transactions.booked:
         if(get_string_between_quotes(category) != None):
             break
     print(f"Transaction: {tx.creditorName} -> Category: {get_string_between_quotes(category)}")
-    # tx.transaction_amount.currency
 
     cheltuieli.add_to_field(get_string_between_quotes(category), (float)(tx.transactionAmount.amount))
 
@@ -138,4 +140,25 @@ print(cheltuieli.free)
 print(cheltuieli.str())
 cheltuieli.update_percentages()
 print(cheltuieli.percentages_str())
+
+
+def whereCanISave(cheltuieli_percentages, client):
+    response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+            {"role": "system", "content": """You are a helpful assistant that will analyze 
+             the spending habits of a person and based on them you will give advice on 
+             where they can cut spending. You have to keep in mind that even though 
+             some percentages may look high (for example bills represets half where the
+             money goes), maybe the person can t live without that expense"""},
+            {"role": "user", "content": f"""Where can 
+             the following user save some money. Give the output in the following format as a list:
+             [Field : percentage that can be saved]\n\Spendings: {cheltuieli_percentages}"""}
+        ],
+        max_tokens=1000,
+        temperature=0.2,
+)
+    return response.choices[0].message.content
+
+print(whereCanISave(cheltuieli.percentages_str(), client))
 

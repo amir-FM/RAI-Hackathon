@@ -1,11 +1,37 @@
 {
   "user": {
     "totalSalary": {
-      "amount": 3000.00,
+      "amount": 3800.00,
       "currency": "EUR"
     },
     "transactions": {
       "booked": [
+        {
+          "transactionId": "100000001",
+          "endToEndId": "E2E1000001",
+          "mandateId": "MDT1000001",
+          "bookingDate": "2024-11-01",
+          "valueDate": "2024-11-02",
+          "transactionAmount": {
+            "amount": 500.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Politehnica bucuresi",
+          "remittanceInformationUnstructured": "Rent Payment"
+        },
+        {
+          "transactionId": "100000001",
+          "endToEndId": "E2E1000001",
+          "mandateId": "MDT1000001",
+          "bookingDate": "2024-11-01",
+          "valueDate": "2024-11-02",
+          "transactionAmount": {
+            "amount": 1000.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Superbet SRL",
+          "remittanceInformationUnstructured": "Rent Payment"
+        },
         {
           "transactionId": "100000001",
           "endToEndId": "E2E1000001",
@@ -39,7 +65,7 @@
           "bookingDate": "2024-11-10",
           "valueDate": "2024-11-11",
           "transactionAmount": {
-            "amount": 60.00,
+            "amount": 560.00,
             "currency": "EUR"
           },
           "creditorName": "Mega Image SRL",
@@ -169,7 +195,7 @@
           "bookingDate": "2024-11-17",
           "valueDate": "2024-11-18",
           "transactionAmount": {
-            "amount": 100.00,
+            "amount": 400.00,
             "currency": "EUR"
           },
           "creditorName": "Taxi",
