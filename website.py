@@ -5,7 +5,58 @@ from llama_index.core.llms import ChatMessage
 import logging
 import time
 from llama_index.llms.ollama import Ollama
-from main import *
+import plotly.express as px
+from streamlit_lightweight_charts import renderLightweightCharts
+import streamlit_lightweight_charts.dataSamples as data
+# from main import *
+
+def chart():
+    labels = ['laptop', 'pahare', 'fifa', 'gantere', 'banane', 'mouse', 'masina', 'haine', 'spritz']
+    values = [10, 10, 10, 10, 10, 10, 10, 10, 20]
+
+    # Different shades of yellow for the pie chart
+    yellow_shades = [
+        "#FFFFE0",  # Light Yellow
+        "#FFF700",  # Lemon Yellow
+        "#FFD700",  # Gold
+        "#FFAE42",  # Yellow Orange
+        "#FFEF00",  # Canary Yellow
+        "#F8D700",  # Daffodil Yellow
+        "#DAA520",  # Goldenrod
+        "#FAFAD2",  # Light Goldenrod Yellow
+        "#FFDD00"   # Bright Yellow
+    ]
+
+    # Creating a Plotly pie chart with different shades of yellow
+    fig = px.pie(
+        names=labels,
+        values=values,
+        title='Fruit Distribution',
+        color_discrete_sequence=yellow_shades,  # Apply the yellow shades
+        hole=0.3  # To create a donut chart, set this between 0 and 1
+    )
+
+    # Update layout for legend and font style
+    fig.update_layout(
+        legend=dict(
+            font=dict(
+                family="yellow",  # You can change the font family here
+                size=18,  # Set the font size
+                color="white"  # Set the font color if needed
+            ),
+            title="Spendings",  # You can also set a title for the legend
+            title_font=dict(
+                size=20,  # Font size of the legend title
+                family="yellow",  # Font family for the legend title
+            )
+        )
+    )
+
+    # Display the interactive pie chart
+    st.plotly_chart(fig)
+
+
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,11 +66,12 @@ if 'messages' not in st.session_state:
 def stream_chat(model, messages):
     try:
         # llm = Ollama(model=model, request_timeout=120.0)
-        resp = categorise()#llm.stream_chat(messages)
+        resp = ""#categorise()#llm.stream_chat(messages)
         response = ""
         response_placeholder = st.empty()
         response = resp
         response_placeholder.write(response)
+        chart()
         # for r in resp:
         #     print(r)
         #     response += r#.delta
@@ -54,6 +106,7 @@ def main():
     model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
     logging.info(f"Model selected: {model}")
 
+
     if prompt := st.chat_input("Your question"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         logging.info(f"User input: {prompt}")
@@ -81,6 +134,8 @@ def main():
                         st.session_state.messages.append({"role": "assistant", "content": str(e)})
                         st.error("An error occurred while generating the response.")
                         logging.error(f"Error: {str(e)}")
+
+
 
 if __name__ == "__main__":
     main()
