@@ -258,3 +258,32 @@ main.run()
 # cheltuieli.update_percentages()
 # print(cheltuieli.percentages_str())
 
+def percentagesParser(cheltuieli):
+    field_names = [
+        'HealthcarePercentage',
+        'EducationPercentage',
+        'FoodAndDrinksPercentage',
+        'RestaurantsOrCoffeShopsPercentage',
+        'BillsPercentage',
+        'EntertainmentPercentage',
+        'ShoppingPercentage',
+        'TransportPercentage',
+        'freePercentage'
+    ]
+
+    # Create a list of corresponding values
+    field_values = [
+        cheltuieli.HealthcarePercentage,
+        cheltuieli.EducationPercentage,
+        cheltuieli.FoodAndDrinksPercentage,
+        cheltuieli.RestaurantsOrCoffeShopsPercentage,
+        cheltuieli.BillsPercentage,
+        cheltuieli.EntertainmentPercentage,
+        cheltuieli.ShoppingPercentage,
+        cheltuieli.TransportPercentage,
+        cheltuieli.freePercentage
+    ]
+
+    return field_names, field_values
+
+print(percentagesParser(cheltuieli))
