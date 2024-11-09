@@ -1,8 +1,13 @@
 import json
 from dataclasses import dataclass
 from typing import List, Optional
+from dotenv import load_dotenv
+import os
+import streamlit as st
 
-from Agents import Agents
+load_dotenv()
+
+# from Agents import Agents
 
 # Define data classes for the JSON structure
 @dataclass
@@ -132,7 +137,7 @@ class Agents:
                 money goes), maybe the person can t live without that expense"""},
                 {"role": "user", "content": f"""Where can
                 the following user save some money. Give the output in the following format as a list:
-                [Field : percentage that can be saved]\n\Spendings: {cheltuieli_percentages}"""}
+                [Field : percentage that can be saved]\nSpendings: {cheltuieli_percentages}"""}
             ],
             max_tokens=1000,
             temperature=0.2,
@@ -183,6 +188,7 @@ class Agents:
 class Main:
     def __init__(self):
         self.agents = Agents()
+        self.isDone = 0
 
         self.cheltuieli = Spendings()
 
@@ -193,6 +199,8 @@ class Main:
 
     # @staticmethod
     def initCategs(self):
+        if self.isDone == 1:
+            return
         for tx in self.agents.parsed_data.user.transactions.booked:
                 category = None
                 while True:
@@ -205,6 +213,7 @@ class Main:
         self.cheltuieli.free = self.cheltuieli.salary - self.cheltuieli.totalSpent
         print("done categorizing")
         self.cheltuieli.percentages_str()
+        self.isDone = 1
 
 
     # @staticmethod
@@ -238,7 +247,7 @@ class Main:
             if price_match:
                 price = float(price_match.group().replace(',', ''))
             print(output)
-            print(f"Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(price, self.cheltuieli.free)}")
+            return output + " " + f"Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(price, self.cheltuieli.free)}"
             print(price)
 
         elif option[0] == "4":
@@ -247,9 +256,10 @@ class Main:
 
 
 
-main = Main()
-main.initCategs()
-main.run()
+# text = input("scrie")
+# main = Main()
+# main.initCategs()
+# main.run(text)
 
 # print(cheltuieli.free)
 

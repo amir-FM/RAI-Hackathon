@@ -200,19 +200,6 @@
           },
           "creditorName": "OMV",
           "remittanceInformationUnstructured": "Transportation"
-        },
-        {
-          "transactionId": "100000010",
-          "endToEndId": "E2E1000010",
-          "mandateId": "MDT1000010",
-          "bookingDate": "2024-11-19",
-          "valueDate": "2024-11-20",
-          "transactionAmount": {
-            "amount": 120.00,
-            "currency": "EUR"
-          },
-          "creditorName": "KFC",
-          "remittanceInformationUnstructured": "Dining Out"
         }
       ],
       "_links": {

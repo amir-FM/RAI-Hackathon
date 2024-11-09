@@ -8,7 +8,16 @@ from llama_index.llms.ollama import Ollama
 import plotly.express as px
 from streamlit_lightweight_charts import renderLightweightCharts
 import streamlit_lightweight_charts.dataSamples as data
-# from main import *
+import main as lama
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+if 'ok' not in st.session_state:
+    st.session_state.ok = 0
+if 'bots' not in st.session_state:
+    st.session_state.bots = lama.Main()
 
 def chart():
     labels = ['laptop', 'pahare', 'fifa', 'gantere', 'banane', 'mouse', 'masina', 'haine', 'spritz']
@@ -66,12 +75,12 @@ if 'messages' not in st.session_state:
 def stream_chat(model, messages):
     try:
         # llm = Ollama(model=model, request_timeout=120.0)
-        resp = ""#categorise()#llm.stream_chat(messages)
+        resp = st.session_state.bots.run(messages[-1])
         response = ""
         response_placeholder = st.empty()
         response = resp
         response_placeholder.write(response)
-        chart()
+        # chart()
         # for r in resp:
         #     print(r)
         #     response += r#.delta
@@ -83,7 +92,6 @@ def stream_chat(model, messages):
         raise e
 
 def main():
-    st.title("Your money is lazy, let's put it to work")
     logging.info("App started")
 
     st.markdown(
@@ -136,6 +144,10 @@ def main():
                         logging.error(f"Error: {str(e)}")
 
 
-
 if __name__ == "__main__":
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n\n\n")
+    if st.session_state.ok == 0:
+        print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\n\n\n\n")
+        st.session_state.bots.initCategs()
+        st.session_state.ok = 1
     main()
