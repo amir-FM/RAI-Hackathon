@@ -119,26 +119,6 @@ class Agents:
         return response.choices[0].message.content
 
 
-
-    def whereCanISave(self, cheltuieli_percentages, client):
-        response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-                {"role": "system", "content": """You are a helpful assistant that will analyze 
-                the spending habits of a person and based on them you will give advice on 
-                where they can cut spending. You have to keep in mind that even though 
-                some percentages may look high (for example bills represets half where the
-                money goes), maybe the person can t live without that expense"""},
-                {"role": "user", "content": f"""Where can 
-                the following user save some money. Give the output in the following format as a list:
-                [Field : percentage that can be saved]\n\Spendings: {cheltuieli_percentages}"""}
-            ],
-            max_tokens=1000,
-            temperature=0.2,
-    )
-        return response.choices[0].message.content
-
-    # print(whereCanISave(cheltuieli.percentages_str(), client))
     def mockWhereCanISave(self):
         print("haiddeeeeeee")
 
@@ -149,7 +129,7 @@ class Agents:
                 {"role": "system", "content": """You are a helpful assistant that will analyze 
                 a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of hos spending habbits)
                  ,  2. How can i save money (this means that the user wnts to have more money), 3. I want to buy something / i have a material wish
-                 4. None of the above. 
+                 4. None of the above., 5. I want to buy the object in "x" years 
                  Return just the prompt with the index included."""},
                 {"role": "user", "content": f"""To which option does the prompt belong {text_input}"""}
             ],
@@ -284,7 +264,24 @@ class Main:
 # print(percentagesParser(cheltuieli))
 
 
-    # @staticmethod
+    def cutFromSpendings(self, cheltuieli_percentages, perc_total):
+        response = self.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that will analyze 
+                the spending habits of a person and based on them you will give advice on 
+                where they can cut spendings"""},
+                {"role": "user", "content": f"""Where can 
+                the following user save another {perc_total} percent of his income. Give the output in the following format as a list:
+                Field : percentage that can be saved\n\Spendings: {cheltuieli_percentages}"""}
+            ],
+            max_tokens=1000,
+            temperature=0.2,
+    )
+        return response.choices[0].message.content
+
+    # print(whereCanISave(cheltuieli.percentages_str(), client))
+
     def run(self, input_text):
         prompt = input_text
         option = self.agents.Master(prompt)
@@ -307,6 +304,19 @@ class Main:
             print("I could not make any sense of your input")
             pass
         elif option[0] == "5":
+            if self.exists_obiect == False:
+                print("Plese reffer to an object that you want to buy")
+            else:
+                match = re.search(r'\d+(?:\.\d+)?', input_text[1:])
+                print(option)
+                if match:
+                    timp_vrut = float(match.group()) if '.' in match.group() else int(match.group())
+
+                    output = self.cutFromSpendings(self.cheltuieli.percentages_str, self.getHowMuchMorePercentage(timp_vrut))
+                    print(output)
+
+
+
 
 
         print(self.percentageParser())
@@ -330,6 +340,7 @@ class Main:
 main = Main()
 main.initCategs()
 main.run("i want to buy a dior saddlebag")
+main.run("i want to buy the bag in 4 years")
 
 # print(cheltuieli.free)
 
