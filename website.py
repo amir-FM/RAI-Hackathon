@@ -30,7 +30,7 @@ logging.basicConfig(level=logging.INFO)
 if 'messages' not in st.session_state:
     st.session_state.messages = []
 
-def stream_chat(model, messages):
+def stream_chat(messages):
     try:
         # llm = Ollama(model=model, request_timeout=120.0)
         resp = st.session_state.bots.run(messages[-1])
@@ -70,8 +70,8 @@ def main():
     )
 
     st.sidebar.image("logo.svg")
-    model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
-    logging.info(f"Model selected: {model}")
+    # model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
+    # logging.info(f"Model selected: {model}")
 
 
     if prompt := st.chat_input("Your question"):
@@ -90,7 +90,7 @@ def main():
                 with st.spinner("Writing..."):
                     try:
                         messages = [ChatMessage(role=msg["role"], content=msg["content"]) for msg in st.session_state.messages]
-                        response_message = stream_chat(model, messages)
+                        response_message = stream_chat(messages)
                         duration = time.time() - start_time
                         response_message_with_duration = f"{response_message}\n\nDuration: {duration:.2f} seconds"
                         st.session_state.messages.append({"role": "assistant", "content": response_message_with_duration})
@@ -104,9 +104,7 @@ def main():
 
 
 if __name__ == "__main__":
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n\n\n\n")
     if st.session_state.ok == 0:
-        print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\n\n\n\n")
         st.session_state.bots.initCategs()
         st.session_state.ok = 1
     main()
