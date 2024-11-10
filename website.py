@@ -20,51 +20,6 @@ if 'ok' not in st.session_state:
 if 'bots' not in st.session_state:
     st.session_state.bots = lama.Main()
 
-#     # Display the interactive pie chart
-#     st.plotly_chart(fig)
-#
-#
-def make_buttons():
-    button_messages = [
-        "Hello, how are you?",
-        "What is your name?",
-        "Tell me a joke!",
-        "What can you do?"
-    ]
-    col1, col2, col3, col4 = st.columns(4)
-
-    with col1:
-        if st.button(button_messages[0]):
-            st.session_state.chat_history.append(f"You: {button_messages[0]}")
-            response = f"Bot: You said '{button_messages[0]}'"
-            st.session_state.chat_history.append(response)
-            st.experimental_rerun()
-
-    with col2:
-        if st.button(button_messages[1]):
-            st.session_state.chat_history.append(f"You: {button_messages[1]}")
-            response = f"Bot: You said '{button_messages[1]}'"
-            st.session_state.chat_history.append(response)
-            st.experimental_rerun()
-
-    with col3:
-        if st.button(button_messages[2]):
-            st.session_state.chat_history.append(f"You: {button_messages[2]}")
-            response = f"Bot: You said '{button_messages[2]}'"
-            st.session_state.chat_history.append(response)
-            st.experimental_rerun()
-
-    with col4:
-        if st.button(button_messages[3]):
-            st.session_state.chat_history.append(f"You: {button_messages[3]}")
-            response = f"Bot: You said '{button_messages[3]}'"
-            st.session_state.chat_history.append(response)
-            st.experimental_rerun()
-
-    for text in button_messages:
-        st.button(text)
-
-
 logging.basicConfig(level=logging.INFO)
 
 if 'messages' not in st.session_state:
@@ -79,7 +34,7 @@ def stream_chat(messages):
         response = resp
         response_placeholder.write(response)
         # chart()
-        st.session_state.bots.percentageParser()
+        # st.session_state.bots.percentageParser()
         # for r in resp:
         #     print(r)
         #     response += r#.delta
@@ -151,8 +106,7 @@ if __name__ == "__main__":
         page_icon="little_logo.png",  # Optional: You can also set a page icon
         layout="wide"  # Optional: You can set the layout to "wide" or "centered"
     )
-    # make_buttons()
-    # if st.session_state.ok == 0:
-    #     st.session_state.bots.initCategs()
-    #     st.session_state.ok = 1
+    if st.session_state.ok == 0:
+        st.session_state.bots.initCategs()
+        st.session_state.ok = 1
     main()

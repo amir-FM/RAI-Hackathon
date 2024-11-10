@@ -7,10 +7,14 @@ import streamlit as st
 import plotly.express as px
 from streamlit_lightweight_charts import renderLightweightCharts
 import streamlit_lightweight_charts.dataSamples as data
+import json
+from dataclasses import dataclass
+from typing import List, Optional
+from llama_index.core.llms import ChatMessage
 
 load_dotenv()
 
-# from Agents import Agents
+
 
 # Define data classes for the JSON structure
 @dataclass
@@ -128,26 +132,6 @@ class Agents:
         return response.choices[0].message.content
 
 
-
-    def whereCanISave(self, cheltuieli_percentages, client):
-        response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-                {"role": "system", "content": """You are a helpful assistant that will analyze
-                the spending habits of a person and based on them you will give advice on
-                where they can cut spending. You have to keep in mind that even though
-                some percentages may look high (for example bills represets half where the
-                money goes), maybe the person can t live without that expense"""},
-                {"role": "user", "content": f"""Where can
-                the following user save some money. Give the output in the following format as a list:
-                [Field : percentage that can be saved]\nSpendings: {cheltuieli_percentages}"""}
-            ],
-            max_tokens=1000,
-            temperature=0.2,
-    )
-        return response.choices[0].message.content
-
-    # print(whereCanISave(cheltuieli.percentages_str(), client))
     def mockWhereCanISave(self):
         print("haiddeeeeeee")
 
@@ -156,9 +140,9 @@ class Agents:
         model="gpt-4o",
         messages=[
                 {"role": "system", "content": """You are a helpful assistant that will analyze
-                a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of hos spending habbits)
-                 ,  2. How can i save money (this means that the user wnts to have more money), 3. I want to buy something / i have a material wish
-                 4. None of the above.
+                a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of his spending habbits)
+                 , 3. I want to buy something / i have a material wish
+                 4. None of the above., 5. I want to buy the object in "x" years, 6. I want to put my money in an economy account
                  Return just the prompt with the index included."""},
                 {"role": "user", "content": f"""To which option does the prompt belong {text_input}"""}
             ],
@@ -181,11 +165,48 @@ class Agents:
         return response.choices[0].message.content
 
 
+    def invest(self, advised_savings):
+        response = self.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that recommends saving accounts at Raiffaisen Romania or government bonds or treasury bonds Romania, displaying benefit."""},
+                {"role": "user", "content": f"Give me the result of putting {advised_savings} every month for a year in saving accounts at Raiffaisen Romania or government bonds or treasury bonds Romania, display only final result and multiple options, also writing separtely benefit"}
+            ],
+        max_tokens=400,
+        temperature=0.2,
+)
+        return response.choices[0].message.content
+
+
+
+    def general(self, question):
+        response = self.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that can answer financial related questions.
+                  if any other type of question is asked you must respond : "This question is out of my field of expertise" """},
+                {"role": "user", "content": f"Answer this question: {question}"}
+            ],
+        max_tokens=400,
+        temperature=0.2,
+)
+        return response.choices[0].message.content
+
     def timeUntillPurchase(self, needed, monthly_savings):
         if((needed /( 12 * monthly_savings)) < 1):
+            if(needed / monthly_savings < 1):
+                if(needed / 30 * monthly_savings < 1):
+                    self.exists_object = False
+                    return "Your wishist item does not need financial planning\n"
+                return "{:.2f}".format(needed / 30 * monthly_savings) + " days"
             return "{:.2f}".format(needed / monthly_savings) + " months"
         return "{:.2f}".format(needed/(12 * monthly_savings)) + " years"
     # se poate expanda pe luni (telefoane )
+
+    def timeUntillPurchase_floatRet(self, needed, monthly_savings):
+        if((needed /( 12 * monthly_savings)) < 1):
+            return (needed / monthly_savings)
+        return needed/(12 * monthly_savings)
 
 import streamlit as st
 import plotly.express as px
@@ -201,26 +222,25 @@ class Main:
         pass
 
     def chart(self, labels, values):
-        # labels = ['laptop', 'pahare', 'fifa', 'gantere', 'banane', 'mouse', 'masina', 'haine', 'spritz']
-        # values = [10, 10, 10, 10, 10, 10, 10, 10, 20]
-
         # Different shades of yellow for the pie chart
-        colors = [
-            '#FFFF00',  # Bright Yellow
-            '#FFD700',  # Gold
-            '#FFC300',  # Sunflower Yellow
-            '#FFEA00',  # Neon Yellow
-            '#F6EB61',  # Light Yellow
-            '#FFCC00',  # Amber
-            '#E6BE00',  # Mustard Yellow
-            '#F9E74E',  # Pale Yellow
-            '#FFB300'   # Bright Amber
+        yellow_shades = [
+            "#FFFFE0",  # Light Yellow
+            "#FFF700",  # Lemon Yellow
+            "#FFD700",  # Gold
+            "#FFAE42",  # Yellow Orange
+            "#FFEF00",  # Canary Yellow
+            "#F8D700",  # Daffodil Yellow
+            "#DAA520",  # Goldenrod
+            "#FAFAD2",  # Light Goldenrod Yellow
+            "#FFDD00"   # Bright Yellow
         ]
+
+        # Creating a Plotly pie chart with different shades of yellow
         fig = px.pie(
             names=labels,
             values=values,
-            title='Spending Habits',
-            color_discrete_sequence=colors,  # Apply the yellow shades
+            title='Fruit Distribution',
+            color_discrete_sequence=yellow_shades,  # Apply the yellow shades
             hole=0.3  # To create a donut chart, set this between 0 and 1
         )
 
@@ -258,20 +278,22 @@ class Main:
         self.cheltuieli.free = self.cheltuieli.salary - self.cheltuieli.totalSpent
         print("done categorizing")
         self.cheltuieli.update_percentages()
+        print(self.cheltuieli.str())
 
 
     def percentageParser(self):
         field_names = [
-            'Health',
-            'Education',
-            'Food',
-            'Dining',
-            'Bills',
-            'Entertainment',
-            'Shopping',
-            'Transport',
-            'Savings'
+            'HealthcarePercentage',
+            'EducationPercentage',
+            'FoodAndDrinksPercentage',
+            'RestaurantsOrCoffeShopsPercentage',
+            'BillsPercentage',
+            'EntertainmentPercentage',
+            'ShoppingPercentage',
+            'TransportPercentage',
+            'freePercentage'
         ]
+
         # Create a list of corresponding values
         field_values = [
             self.cheltuieli.HealthcarePercentage,
@@ -284,61 +306,129 @@ class Main:
             self.cheltuieli.TransportPercentage,
             self.cheltuieli.freePercentage
         ]
+
         self.chart(field_names, field_values)
-        return field_names, field_values
+        return "piechart"
 
 # print(percentagesParser(cheltuieli))
 
+    # def
 
-    # @staticmethod
+
+    def cutFromSpendings(self, cheltuieli_percentages, perc_total):
+        response = self.agents.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that will analyze
+                the spending habits of a person and based on them you will give advice on
+                where they can cut spendings."""},
+                {"role": "user", "content": f"""Where can
+                the following user save another {perc_total} percent of his income. Give the output in the following format as a list from at least 2 elements:
+                index.Field : percentage that can be saved in order to add to that percentage\n\Spendings: {cheltuieli_percentages}. DO NOT INCLUDE A TOTAL"""}
+            ],
+            max_tokens=1000,
+            temperature=0.2,
+    )
+        return response.choices[0].message.content
+
+    # print(whereCanISave(cheltuieli.percentages_str(), client))
+
     def run(self, input_text):
+        print(input_text, type(input_text))
+        # # input_text = input_text.__str__
+        # input_text = input_text.content
         prompt = input_text
         option = self.agents.Master(prompt)
         print(option)
 
         if option[0] == "1":
+            return self.percentageParser()
             pass
-        elif option[0] == "2":
-            self.agents.mockWhereCanISave()
+        # elif option[0] == "2":
+        #     self.agents.mockWhereCanISave()
         elif option[0] == "3":
             output = self.agents.wishes(prompt)
             self.price = (float)(output)
-            print(output)
-            print(f"free = {self.cheltuieli.free}")
-            return output + " " + f"{prompt}: Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)}"
-            print(self.price)
+            # print(output)
+            # print(f"free = {self.cheltuieli.free}")
             self.exists_obiect = True
+            return f"The price for the object is: {int(self.price)} euro. " + f"Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)}"
+            # print(self.price)
 
         elif option[0] == "4":
-            print("I could not make any sense of your input")
+            # print("I could not make any sense of your input")
+            return self.agents.general(input_text)
             pass
         elif option[0] == "5":
-            print(self.percentageParser())
+            try:
+                if self.exists_obiect == False:
+                    print("Plese reffer to an object that you want to buy")
+                else:
+                    match = re.search(r'\d+(?:\.\d+)?', input_text.content[1:])
+                    print(option)
+                    if match:
+                        timp_vrut = float(match.group()) if '.' in match.group() else int(match.group())
+                        print(timp_vrut)
+                        print(self.cheltuieli.percentages_str())
+                        print(f"cat de mai mult perc ne trb {self.getHowMuchMorePercentage(timp_vrut)}")
+                        output = self.cutFromSpendings(self.cheltuieli.percentages_str(), self.getHowMuchMorePercentage(timp_vrut))
+                        print("Given your current spending habbits you could cut these ")
+                        print(output)
+
+                        # print(self.format_cutting(output))
+                        return str(f"Given your current spending habbits you could cut these\n\n" + str(self.format_cutting(output)))
+                        # //return aici
+            except:
+                return self.run(input_text)
+        elif option[0] == "6":
+            return (self.agents.invest(self.cheltuieli.free))
+
+
+    def format_cutting(self, output):
+        ret = ""
+        total = 0
+        parts = output.split('\n')
+        for x in parts:
+
+            subParts = x.split(":")
+            left_part = subParts[0]
+            if(self.can_convert_to_int(left_part[0]) == False):
+                break
+            perc = subParts[1]
+            perc = perc[1:-1]
+            ret = ret + (f"{left_part} : {((float)(perc) / 100 * (self.cheltuieli.salary)):.2f} Euro  ({perc}%)\n")
+            total = total + (float)(perc) / 100 * (self.cheltuieli.salary)
+        ret = ret + f"\n\nTotal = {total:.2f} Euro"
+        return ret
+
+
+
+    def can_convert_to_int(self, s):
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False
 
     def getHowMuchMorePercentage(self, timp_vrut):
         economii_luna_old = self.cheltuieli.free
-        timp_initial = self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)
-
-        economii_luna_new = (timp_vrut * economii_luna_old) / timp_initial
-
-        percentage_economii_luna_old = economii_luna_old / self.cheltuieli.salary
-
-        percentage_economii_luna_new = economii_luna_new / self.cheltuieli.salary
-
-
-
+        timp_initial = self.agents.timeUntillPurchase_floatRet(self.price, self.cheltuieli.free)
+        economii_luna_new = (timp_initial * economii_luna_old) / timp_vrut
+        percentage_economii_luna_old = economii_luna_old / self.cheltuieli.salary * 100
+        percentage_economii_luna_new = economii_luna_new / self.cheltuieli.salary * 100
         return percentage_economii_luna_new - percentage_economii_luna_old
 
 
 
-# text = input("scrie")
 # main = Main()
-# main.initCategs()
-# main.run(text)
+# # main.initCategs()
 
-# print(cheltuieli.free)
+# main.cheltuieli.debug()
+# main.cheltuieli.update_percentages()
 
-
-# print(cheltuieli.str())
-# cheltuieli.update_percentages()
-# print(cheltuieli.percentages_str())
+# print(main.cheltuieli.percentages_str())
+# print(main.run("what does interest mean"))
+# print(main.run("how much potassium do bananas have"))
+# main.run("What s a good economy account")
+# main.run("i want to buy a dior saddlebag")
+# main.run("i want to buy the bag in 4 years")
