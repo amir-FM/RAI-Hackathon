@@ -48,16 +48,17 @@ labels = ['laptop', 'pahare', 'fifa', 'gantere', 'banane', 'mouse', 'masina', 'h
 values = [10, 10, 10, 10, 10, 10, 10, 10, 20]
 
 # Different shades of yellow for the pie chart
-yellow_shades = [
-    "#FFFFE0",  # Light Yellow
-    "#FFF700",  # Lemon Yellow
+other_colors = [
+    "#FF6347",  # Tomato Red
+    "#40E0D0",  # Turquoise
+    "#8A2BE2",  # Blue Violet
+    "#7FFF00",  # Chartreuse
+    "#DC143C",  # Crimson
+    "#00BFFF",  # Deep Sky Blue
+    "#32CD32",  # Lime Green
     "#FFD700",  # Gold
-    "#FFAE42",  # Yellow Orange
-    "#FFEF00",  # Canary Yellow
-    "#F8D700",  # Daffodil Yellow
-    "#DAA520",  # Goldenrod
-    "#FAFAD2",  # Light Goldenrod Yellow
-    "#FFDD00"   # Bright Yellow
+    "#FF1493",  # Deep Pink
+    "#00FF00"   # Lime
 ]
 
 # Creating a Plotly pie chart with different shades of yellow
@@ -65,7 +66,7 @@ fig = px.pie(
     names=labels,
     values=values,
     title='Fruit Distribution',
-    color_discrete_sequence=yellow_shades,  # Apply the yellow shades
+    color_discrete_sequence=other_colors,  # Apply the yellow shades
     hole=0.3  # To create a donut chart, set this between 0 and 1
 )
 
