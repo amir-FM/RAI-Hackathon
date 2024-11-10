@@ -239,7 +239,7 @@ class Main:
         fig = px.pie(
             names=labels,
             values=values,
-            title='Fruit Distribution',
+            title='Financial Chart',
             color_discrete_sequence=yellow_shades,  # Apply the yellow shades
             hole=0.3  # To create a donut chart, set this between 0 and 1
         )
@@ -308,7 +308,7 @@ class Main:
         ]
 
         self.chart(field_names, field_values)
-        return "piechart"
+        return "Here's a visual snapshot of your financial journey—let's turn these numbers into actionable insights!"
 
 # print(percentagesParser(cheltuieli))
 
@@ -334,6 +334,8 @@ class Main:
     # print(whereCanISave(cheltuieli.percentages_str(), client))
 
     def run(self, input_text):
+        if input_text.content == "help":
+            return self.help()
         print(input_text, type(input_text))
         # # input_text = input_text.__str__
         # input_text = input_text.content
@@ -417,6 +419,15 @@ class Main:
         percentage_economii_luna_old = economii_luna_old / self.cheltuieli.salary * 100
         percentage_economii_luna_new = economii_luna_new / self.cheltuieli.salary * 100
         return percentage_economii_luna_new - percentage_economii_luna_old
+
+    def help(self):
+        return """This chatbot has the following options:\n
+                   \t1. It can answer any type of financial question\n
+                   \t2. It can show you a piechart that shows you where your income goes monthly\n
+                   \t3. It can look up the price of any object and tell you in how much time you will be able to get it, based on your current financial behavior\n
+                   \t4. You can tell it in what time period you want the certain object and you will receive an adjustment to your financial behavior\n
+                   \t5. It can give you some safe economy funds that you can put your money in\n"""
+
 
 
 
