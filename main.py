@@ -283,15 +283,15 @@ class Main:
 
     def percentageParser(self):
         field_names = [
-            'HealthcarePercentage',
-            'EducationPercentage',
-            'FoodAndDrinksPercentage',
-            'RestaurantsOrCoffeShopsPercentage',
-            'BillsPercentage',
-            'EntertainmentPercentage',
-            'ShoppingPercentage',
-            'TransportPercentage',
-            'freePercentage'
+            'Healthcare',
+            'Education',
+            'Food',
+            'Restaurant',
+            'Bills',
+            'Entertainment',
+            'Shopping',
+            'Transport',
+            'Free'
         ]
 
         # Create a list of corresponding values
@@ -381,7 +381,7 @@ class Main:
             except:
                 return self.run(input_text)
         elif option[0] == "6":
-            return (self.agents.invest(self.cheltuieli.free))
+            return (self.agents.invest(self.cheltuieli.free)) + "\n\nNote: The data provided is not generated; it is based on the actual rates available on the site."
 
 
     def format_cutting(self, output):
