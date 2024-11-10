@@ -127,7 +127,7 @@ class Agents:
         model="gpt-4o",
         messages=[
                 {"role": "system", "content": """You are a helpful assistant that will analyze 
-                a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of hos spending habbits)
+                a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of his spending habbits)
                  ,  2. How can i save money (this means that the user wnts to have more money), 3. I want to buy something / i have a material wish
                  4. None of the above., 5. I want to buy the object in "x" years 
                  Return just the prompt with the index included."""},
@@ -281,7 +281,7 @@ class Main:
                 where they can cut spendings"""},
                 {"role": "user", "content": f"""Where can 
                 the following user save another {perc_total} percent of his income. Give the output in the following format as a list:
-                Field : percentage that can be saved in order to add to that percentage\n\Spendings: {cheltuieli_percentages}"""}
+                index.Field : percentage that can be saved in order to add to that percentage\n\Spendings: {cheltuieli_percentages}. DO NOT INCLUDE A TOTAL"""}
             ],
             max_tokens=1000,
             temperature=0.2,
@@ -323,33 +323,52 @@ class Main:
                     print(self.cheltuieli.percentages_str())
                     print(f"cat de mai mult perc ne trb {self.getHowMuchMorePercentage(timp_vrut)}")
                     output = self.cutFromSpendings(self.cheltuieli.percentages_str(), self.getHowMuchMorePercentage(timp_vrut))
-                    print("Giiven your current spending habbits you could cut these ")
+                    print("Given your current spending habbits you could cut these ")
                     print(output)
+
+                    print(self.format_cutting(output))
+                    # //return aici
 
 
     def format_cutting(self, output):
-        parts = output.split()
+        ret = ""
+        total = 0
+        parts = output.split('\n')
         for x in parts:
-            print(x)
+            
+            subParts = x.split(":")
+            left_part = subParts[0]
+            if(self.can_convert_to_int(left_part[0]) == False):
+                break
+            perc = subParts[1]
+            perc = perc[1:-1]
+            ret = ret + (f"{left_part} : {((float)(perc) / 100 * (self.cheltuieli.salary)):.2f} Euro  ({perc}%)\n")
+            total = total + (float)(perc) / 100 * (self.cheltuieli.salary)
+        ret = ret + f"Total = {total:.2f} Euro"
+        return ret
+            # index = subParts[0]
+            # # if(self.can_convert_to_int(index[0]) == False):
+            # #     break
+            # category = subParts[1]
+            # percentage = subParts[2]
+            # # print(index, category,((float)(percentage[:-1])) / 100 * (self.cheltuieli.salary)  ,percentage)
+            # print(f"index = {index}, category = {category}, percent = {percentage}")
+                # print(subParts)
 
 
-
+    def can_convert_to_int(self, s):
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False
 
     def getHowMuchMorePercentage(self, timp_vrut):
         economii_luna_old = self.cheltuieli.free
         timp_initial = self.agents.timeUntillPurchase_floatRet(self.price, self.cheltuieli.free)
-
-
         economii_luna_new = (timp_initial * economii_luna_old) / timp_vrut
-
-
-
         percentage_economii_luna_old = economii_luna_old / self.cheltuieli.salary * 100
-
         percentage_economii_luna_new = economii_luna_new / self.cheltuieli.salary * 100
-
-        
-        print(percentage_economii_luna_new, percentage_economii_luna_old)
         return percentage_economii_luna_new - percentage_economii_luna_old
 
 
