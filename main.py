@@ -128,7 +128,7 @@ class Agents:
         messages=[
                 {"role": "system", "content": """You are a helpful assistant that will analyze 
                 a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of his spending habbits)
-                 ,  2. How can i save money (this means that the user wnts to have more money), 3. I want to buy something / i have a material wish
+                 , 3. I want to buy something / i have a material wish
                  4. None of the above., 5. I want to buy the object in "x" years, 6. I want to put my money in an economy account
                  Return just the prompt with the index included."""},
                 {"role": "user", "content": f"""To which option does the prompt belong {text_input}"""}
@@ -164,6 +164,20 @@ class Agents:
 )
         return response.choices[0].message.content
 
+
+
+    def general(self, question):
+        response = self.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that can answer financial related questions.
+                  if any other type of question is asked you must respond : "This question is out of my field of expertise" """},
+                {"role": "user", "content": f"Answer this question: {question}"}
+            ],
+        max_tokens=400,
+        temperature=0.2,
+)
+        return response.choices[0].message.content
 
     def timeUntillPurchase(self, needed, monthly_savings):
         if((needed /( 12 * monthly_savings)) < 1):
@@ -327,7 +341,8 @@ class Main:
             # print(self.price)
 
         elif option[0] == "4":
-            print("I could not make any sense of your input")
+            # print("I could not make any sense of your input")
+            return self.agents.general(input_text)
             pass
         elif option[0] == "5":
             if self.exists_obiect == False:
@@ -393,6 +408,8 @@ main.cheltuieli.debug()
 main.cheltuieli.update_percentages()
 
 print(main.cheltuieli.percentages_str())
+print(main.run("what does interest mean"))
+print(main.run("how much potassium do bananas have"))
 main.run("What s a good economy account")
 main.run("i want to buy a dior saddlebag")
 main.run("i want to buy the bag in 4 years")
