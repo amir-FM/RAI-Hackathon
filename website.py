@@ -19,50 +19,8 @@ if 'ok' not in st.session_state:
 if 'bots' not in st.session_state:
     st.session_state.bots = lama.Main()
 
-def chart():
-    labels = ['laptop', 'pahare', 'fifa', 'gantere', 'banane', 'mouse', 'masina', 'haine', 'spritz']
-    values = [10, 10, 10, 10, 10, 10, 10, 10, 20]
-
-    # Different shades of yellow for the pie chart
-    yellow_shades = [
-        "#FFFFE0",  # Light Yellow
-        "#FFF700",  # Lemon Yellow
-        "#FFD700",  # Gold
-        "#FFAE42",  # Yellow Orange
-        "#FFEF00",  # Canary Yellow
-        "#F8D700",  # Daffodil Yellow
-        "#DAA520",  # Goldenrod
-        "#FAFAD2",  # Light Goldenrod Yellow
-        "#FFDD00"   # Bright Yellow
-    ]
-
-    # Creating a Plotly pie chart with different shades of yellow
-    fig = px.pie(
-        names=labels,
-        values=values,
-        title='Fruit Distribution',
-        color_discrete_sequence=yellow_shades,  # Apply the yellow shades
-        hole=0.3  # To create a donut chart, set this between 0 and 1
-    )
-
-    # Update layout for legend and font style
-    fig.update_layout(
-        legend=dict(
-            font=dict(
-                family="yellow",  # You can change the font family here
-                size=18,  # Set the font size
-                color="white"  # Set the font color if needed
-            ),
-            title="Spendings",  # You can also set a title for the legend
-            title_font=dict(
-                size=20,  # Font size of the legend title
-                family="yellow",  # Font family for the legend title
-            )
-        )
-    )
-
-    # Display the interactive pie chart
-    st.plotly_chart(fig)
+#     # Display the interactive pie chart
+#     st.plotly_chart(fig)
 
 
 

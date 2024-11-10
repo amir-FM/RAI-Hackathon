@@ -264,17 +264,16 @@ class Main:
 
     def percentageParser(self):
         field_names = [
-            'HealthcarePercentage',
-            'EducationPercentage',
-            'FoodAndDrinksPercentage',
-            'RestaurantsOrCoffeShopsPercentage',
-            'BillsPercentage',
-            'EntertainmentPercentage',
-            'ShoppingPercentage',
-            'TransportPercentage',
-            'freePercentage'
+            'Health',
+            'Education',
+            'Food',
+            'Dining',
+            'Bills',
+            'Entertainment',
+            'Shopping',
+            'Transport',
+            'Savings'
         ]
-
         # Create a list of corresponding values
         field_values = [
             self.cheltuieli.HealthcarePercentage,
