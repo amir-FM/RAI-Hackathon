@@ -68,6 +68,8 @@ def main():
 
     st.sidebar.image("logo.svg")
     # model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
+    st.sidebar.button(f"Monthly Income: {int(st.session_state.bots.getSalary())}€")
+    st.sidebar.button(f"Monthly Expenses: 3490€")
 
     # logging.info(f"Model selected: {model}")
 

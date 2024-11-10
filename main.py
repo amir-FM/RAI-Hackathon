@@ -428,6 +428,15 @@ class Main:
                    \t4. You can tell it in what time period you want the certain object and you will receive an adjustment to your financial behavior\n
                    \t5. It can give you some safe economy funds that you can put your money in\n"""
 
+    def getSalary(self):
+        return self.cheltuieli.salary
+
+    def getFree(self):
+        return self.cheltuieli.free
+
+    def getSpendingsTotal(self):
+        return self.cheltuieli.totalSpent
+
 
 
 
