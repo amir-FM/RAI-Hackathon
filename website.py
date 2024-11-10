@@ -70,6 +70,8 @@ def main():
     # model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
     st.sidebar.button(f"Monthly Income: {int(st.session_state.bots.getSalary())}€")
     st.sidebar.button(f"Monthly Expenses: 3490€")
+    st.sidebar.button(f"Surplus funds: {int(st.session_state.bots.getSalary()) - 3490}€")
+    st.sidebar.button(f"Type 'help' for info.")
 
     # logging.info(f"Model selected: {model}")
 
