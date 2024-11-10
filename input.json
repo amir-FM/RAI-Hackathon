@@ -1,0 +1,212 @@
+{
+  "user": {
+    "totalSalary": {
+      "amount": 3800.00,
+      "currency": "EUR"
+    },
+    "transactions": {
+      "booked": [
+        {
+          "transactionId": "100000001",
+          "endToEndId": "E2E1000001",
+          "mandateId": "MDT1000001",
+          "bookingDate": "2024-11-01",
+          "valueDate": "2024-11-02",
+          "transactionAmount": {
+            "amount": 500.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Politehnica bucuresi",
+          "remittanceInformationUnstructured": "Rent Payment"
+        },
+        {
+          "transactionId": "100000001",
+          "endToEndId": "E2E1000001",
+          "mandateId": "MDT1000001",
+          "bookingDate": "2024-11-01",
+          "valueDate": "2024-11-02",
+          "transactionAmount": {
+            "amount": 1000.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Superbet SRL",
+          "remittanceInformationUnstructured": "Rent Payment"
+        },
+        {
+          "transactionId": "100000001",
+          "endToEndId": "E2E1000001",
+          "mandateId": "MDT1000001",
+          "bookingDate": "2024-11-01",
+          "valueDate": "2024-11-02",
+          "transactionAmount": {
+            "amount": 400.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Chirie SRL",
+          "remittanceInformationUnstructured": "Rent Payment"
+        },
+        {
+          "transactionId": "100000002",
+          "endToEndId": "E2E1000002",
+          "mandateId": "MDT1000002",
+          "bookingDate": "2024-11-03",
+          "valueDate": "2024-11-04",
+          "transactionAmount": {
+            "amount": 75.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Mega Image SRL",
+          "remittanceInformationUnstructured": "Groceries"
+        },
+        {
+          "transactionId": "100000015",
+          "endToEndId": "E2E1000015",
+          "mandateId": "MDT1000015",
+          "bookingDate": "2024-11-10",
+          "valueDate": "2024-11-11",
+          "transactionAmount": {
+            "amount": 560.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Mega Image SRL",
+          "remittanceInformationUnstructured": "Groceries"
+        },
+        {
+          "transactionId": "100000003",
+          "endToEndId": "E2E1000003",
+          "mandateId": "MDT1000003",
+          "bookingDate": "2024-11-05",
+          "valueDate": "2024-11-06",
+          "transactionAmount": {
+            "amount": 100.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Enel Energie SRL",
+          "remittanceInformationUnstructured": "Utilities"
+        },
+        {
+          "transactionId": "100000004",
+          "endToEndId": "E2E1000004",
+          "mandateId": "MDT1000004",
+          "bookingDate": "2024-11-07",
+          "valueDate": "2024-11-08",
+          "transactionAmount": {
+            "amount": 20.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Starbucks România SRL",
+          "remittanceInformationUnstructured": "Coffee"
+        },
+        {
+          "transactionId": "100000016",
+          "endToEndId": "E2E1000016",
+          "mandateId": "MDT1000016",
+          "bookingDate": "2024-11-12",
+          "valueDate": "2024-11-13",
+          "transactionAmount": {
+            "amount": 15.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Starbucks România SRL",
+          "remittanceInformationUnstructured": "Coffee"
+        },
+        {
+          "transactionId": "100000005",
+          "endToEndId": "E2E1000005",
+          "mandateId": "MDT1000005",
+          "bookingDate": "2024-11-09",
+          "valueDate": "2024-11-10",
+          "transactionAmount": {
+            "amount": 100.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Zara România SRL",
+          "remittanceInformationUnstructured": "Clothing"
+        },
+        {
+          "transactionId": "100000017",
+          "endToEndId": "E2E1000017",
+          "mandateId": "MDT1000017",
+          "bookingDate": "2024-11-15",
+          "valueDate": "2024-11-16",
+          "transactionAmount": {
+            "amount": 80.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Zara România SRL",
+          "remittanceInformationUnstructured": "Clothing"
+        },
+        {
+          "transactionId": "100000018",
+          "endToEndId": "E2E1000018",
+          "mandateId": "MDT1000018",
+          "bookingDate": "2024-11-20",
+          "valueDate": "2024-11-21",
+          "transactionAmount": {
+            "amount": 70.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Zara România SRL",
+          "remittanceInformationUnstructured": "Clothing"
+        },
+        {
+          "transactionId": "100000006",
+          "endToEndId": "E2E1000006",
+          "mandateId": "MDT1000006",
+          "bookingDate": "2024-11-11",
+          "valueDate": "2024-11-12",
+          "transactionAmount": {
+            "amount": 50.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Digi România SRL",
+          "remittanceInformationUnstructured": "Internet and TV"
+        },
+        {
+          "transactionId": "100000007",
+          "endToEndId": "E2E1000007",
+          "mandateId": "MDT1000007",
+          "bookingDate": "2024-11-13",
+          "valueDate": "2024-11-14",
+          "transactionAmount": {
+            "amount": 60.00,
+            "currency": "EUR"
+          },
+          "creditorName": "World Class România SRL",
+          "remittanceInformationUnstructured": "Gym Membership"
+        },
+        {
+          "transactionId": "100000008",
+          "endToEndId": "E2E1000008",
+          "mandateId": "MDT1000008",
+          "bookingDate": "2024-11-15",
+          "valueDate": "2024-11-16",
+          "transactionAmount": {
+            "amount": 60.00,
+            "currency": "EUR"
+          },
+          "creditorName": "Farmacia Tei SRL",
+          "remittanceInformationUnstructured": "Health Expenses"
+        },
+        {
+          "transactionId": "100000009",
+          "endToEndId": "E2E1000009",
+          "mandateId": "MDT1000009",
+          "bookingDate": "2024-11-17",
+          "valueDate": "2024-11-18",
+          "transactionAmount": {
+            "amount": 400.00,
+            "currency": "EUR"
+          },
+          "creditorName": "OMV",
+          "remittanceInformationUnstructured": "Transportation"
+        }
+      ],
+      "_links": {
+        "viewAccount": {
+          "href": "https://bank.example.com/viewAccount"
+        }
+      }
+    }
+  }
+}
