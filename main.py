@@ -351,14 +351,7 @@ class Main:
             total = total + (float)(perc) / 100 * (self.cheltuieli.salary)
         ret = ret + f"Total = {total:.2f} Euro"
         return ret
-            # index = subParts[0]
-            # # if(self.can_convert_to_int(index[0]) == False):
-            # #     break
-            # category = subParts[1]
-            # percentage = subParts[2]
-            # # print(index, category,((float)(percentage[:-1])) / 100 * (self.cheltuieli.salary)  ,percentage)
-            # print(f"index = {index}, category = {category}, percent = {percentage}")
-                # print(subParts)
+           
 
 
     def can_convert_to_int(self, s):
@@ -388,10 +381,4 @@ print(main.cheltuieli.percentages_str())
 main.run("i want to buy a dior saddlebag")
 main.run("i want to buy the bag in 4 years")
 
-# print(cheltuieli.free)
-
-
-# print(cheltuieli.str())
-# cheltuieli.update_percentages()
-# print(cheltuieli.percentages_str())
 
