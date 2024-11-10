@@ -129,7 +129,7 @@ class Agents:
                 {"role": "system", "content": """You are a helpful assistant that will analyze 
                 a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of his spending habbits)
                  ,  2. How can i save money (this means that the user wnts to have more money), 3. I want to buy something / i have a material wish
-                 4. None of the above., 5. I want to buy the object in "x" years 
+                 4. None of the above., 5. I want to buy the object in "x" years, 6. I want to put my money in an economy account
                  Return just the prompt with the index included."""},
                 {"role": "user", "content": f"""To which option does the prompt belong {text_input}"""}
             ],
@@ -149,6 +149,19 @@ class Agents:
         max_tokens=400,
         temperature=0.2,
     )
+        return response.choices[0].message.content
+    
+
+    def invest(self, advised_savings):
+        response = self.client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+                {"role": "system", "content": """You are a helpful assistant that recommends saving accounts at Raiffaisen Romania or government bonds or treasury bonds Romania, displaying benefit."""},
+                {"role": "user", "content": f"Give me the result of putting {advised_savings} every month for a year in saving accounts at Raiffaisen Romania or government bonds or treasury bonds Romania, display only final result and multiple options, also writing separtely benefit"}
+            ],
+        max_tokens=400,
+        temperature=0.2,
+)
         return response.choices[0].message.content
 
 
@@ -333,6 +346,8 @@ class Main:
 
                     print(self.format_cutting(output))
                     # //return aici
+        elif option[0] == "6":
+            return (self.agents.invest(self.cheltuieli.free))
 
 
     def format_cutting(self, output):
@@ -378,6 +393,7 @@ main.cheltuieli.debug()
 main.cheltuieli.update_percentages()
 
 print(main.cheltuieli.percentages_str())
+main.run("What s a good economy account")
 main.run("i want to buy a dior saddlebag")
 main.run("i want to buy the bag in 4 years")
 
