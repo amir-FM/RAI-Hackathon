@@ -22,8 +22,47 @@ if 'bots' not in st.session_state:
 
 #     # Display the interactive pie chart
 #     st.plotly_chart(fig)
+#
+#
+def make_buttons():
+    button_messages = [
+        "Hello, how are you?",
+        "What is your name?",
+        "Tell me a joke!",
+        "What can you do?"
+    ]
+    col1, col2, col3, col4 = st.columns(4)
 
+    with col1:
+        if st.button(button_messages[0]):
+            st.session_state.chat_history.append(f"You: {button_messages[0]}")
+            response = f"Bot: You said '{button_messages[0]}'"
+            st.session_state.chat_history.append(response)
+            st.experimental_rerun()
 
+    with col2:
+        if st.button(button_messages[1]):
+            st.session_state.chat_history.append(f"You: {button_messages[1]}")
+            response = f"Bot: You said '{button_messages[1]}'"
+            st.session_state.chat_history.append(response)
+            st.experimental_rerun()
+
+    with col3:
+        if st.button(button_messages[2]):
+            st.session_state.chat_history.append(f"You: {button_messages[2]}")
+            response = f"Bot: You said '{button_messages[2]}'"
+            st.session_state.chat_history.append(response)
+            st.experimental_rerun()
+
+    with col4:
+        if st.button(button_messages[3]):
+            st.session_state.chat_history.append(f"You: {button_messages[3]}")
+            response = f"Bot: You said '{button_messages[3]}'"
+            st.session_state.chat_history.append(response)
+            st.experimental_rerun()
+
+    for text in button_messages:
+        st.button(text)
 
 
 logging.basicConfig(level=logging.INFO)
@@ -53,6 +92,7 @@ def stream_chat(messages):
 
 def main():
     logging.info("App started")
+
 
 
     st.markdown(
@@ -107,11 +147,12 @@ def main():
 
 if __name__ == "__main__":
     st.set_page_config(
-        page_title="My Custom Tab Title",  # Change this to your desired title
-        page_icon=":star:",  # Optional: You can also set a page icon
+        page_title="Financial Advisor",  # Change this to your desired title
+        page_icon="little_logo.png",  # Optional: You can also set a page icon
         layout="wide"  # Optional: You can set the layout to "wide" or "centered"
     )
-    if st.session_state.ok == 0:
-        st.session_state.bots.initCategs()
-        st.session_state.ok = 1
+    # make_buttons()
+    # if st.session_state.ok == 0:
+    #     st.session_state.bots.initCategs()
+    #     st.session_state.ok = 1
     main()
