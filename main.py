@@ -158,6 +158,11 @@ class Agents:
         return "{:.2f}".format(needed/(12 * monthly_savings)) + " years"
     # se poate expanda pe luni (telefoane )
 
+    def timeUntillPurchase_floatRet(self, needed, monthly_savings):
+        if((needed /( 12 * monthly_savings)) < 1):
+            return (needed / monthly_savings)
+        return needed/(12 * monthly_savings)
+
 import streamlit as st
 import plotly.express as px
 
@@ -231,6 +236,7 @@ class Main:
         self.cheltuieli.free = self.cheltuieli.salary - self.cheltuieli.totalSpent
         print("done categorizing")
         self.cheltuieli.update_percentages()
+        print(self.cheltuieli.str())
 
 
     def percentageParser(self):
@@ -263,9 +269,11 @@ class Main:
 
 # print(percentagesParser(cheltuieli))
 
+    # def 
+
 
     def cutFromSpendings(self, cheltuieli_percentages, perc_total):
-        response = self.client.chat.completions.create(
+        response = self.agents.client.chat.completions.create(
         model="gpt-4o",
         messages=[
                 {"role": "system", "content": """You are a helpful assistant that will analyze 
@@ -273,7 +281,7 @@ class Main:
                 where they can cut spendings"""},
                 {"role": "user", "content": f"""Where can 
                 the following user save another {perc_total} percent of his income. Give the output in the following format as a list:
-                Field : percentage that can be saved\n\Spendings: {cheltuieli_percentages}"""}
+                Field : percentage that can be saved in order to add to that percentage\n\Spendings: {cheltuieli_percentages}"""}
             ],
             max_tokens=1000,
             temperature=0.2,
@@ -294,10 +302,10 @@ class Main:
         elif option[0] == "3":
             output = self.agents.wishes(prompt)
             self.price = (float)(output)
-            print(output)
-            print(f"free = {self.cheltuieli.free}")
+            # print(output)
+            # print(f"free = {self.cheltuieli.free}")
             print(f"{prompt}: Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)}")
-            print(self.price)
+            # print(self.price)
             self.exists_obiect = True
 
         elif option[0] == "4":
@@ -311,34 +319,48 @@ class Main:
                 print(option)
                 if match:
                     timp_vrut = float(match.group()) if '.' in match.group() else int(match.group())
-
-                    output = self.cutFromSpendings(self.cheltuieli.percentages_str, self.getHowMuchMorePercentage(timp_vrut))
+                    print(timp_vrut)
+                    print(self.cheltuieli.percentages_str())
+                    print(f"cat de mai mult perc ne trb {self.getHowMuchMorePercentage(timp_vrut)}")
+                    output = self.cutFromSpendings(self.cheltuieli.percentages_str(), self.getHowMuchMorePercentage(timp_vrut))
+                    print("Giiven your current spending habbits you could cut these ")
                     print(output)
 
 
+    def format_cutting(self, output):
+        parts = output.split()
+        for x in parts:
+            print(x)
 
 
 
-        print(self.percentageParser())
 
     def getHowMuchMorePercentage(self, timp_vrut):
         economii_luna_old = self.cheltuieli.free
-        timp_initial = self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)
+        timp_initial = self.agents.timeUntillPurchase_floatRet(self.price, self.cheltuieli.free)
 
-        economii_luna_new = (timp_vrut * economii_luna_old) / timp_initial
 
-        percentage_economii_luna_old = economii_luna_old / self.cheltuieli.salary
-
-        percentage_economii_luna_new = economii_luna_new / self.cheltuieli.salary
+        economii_luna_new = (timp_initial * economii_luna_old) / timp_vrut
 
 
 
+        percentage_economii_luna_old = economii_luna_old / self.cheltuieli.salary * 100
+
+        percentage_economii_luna_new = economii_luna_new / self.cheltuieli.salary * 100
+
+        
+        print(percentage_economii_luna_new, percentage_economii_luna_old)
         return percentage_economii_luna_new - percentage_economii_luna_old
 
 
 
 main = Main()
-main.initCategs()
+# main.initCategs()
+
+main.cheltuieli.debug()
+main.cheltuieli.update_percentages()
+
+print(main.cheltuieli.percentages_str())
 main.run("i want to buy a dior saddlebag")
 main.run("i want to buy the bag in 4 years")
 
