@@ -127,9 +127,9 @@ class Agents:
         model="gpt-4o",
         messages=[
                 {"role": "system", "content": """You are a helpful assistant that will analyze 
-                a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of his spending habbits)
+                a prompt from the user and compare it to the following options: 1. Get my monthly spendings/ finances (the user wants an analysys of his spending habbits) / financial graph / spendings graph
                  , 3. I want to buy something / i have a material wish
-                 4. None of the above., 5. I want to buy the object in "x" years, 6. I want to put my money in an economy account
+                 4. None of the above., 5. I want to buy the object in "x" years, 6. I want to put my money in an economy account/ I want to save money
                  Return just the prompt with the index included."""},
                 {"role": "user", "content": f"""To which option does the prompt belong {text_input}"""}
             ],
@@ -326,7 +326,7 @@ class Main:
         prompt = input_text
         option = self.agents.Master(prompt)
         print(option)
-
+        prompt.__str__()
         if option[0] == "1":
             pass
         elif option[0] == "2":
@@ -400,6 +400,14 @@ class Main:
         return percentage_economii_luna_new - percentage_economii_luna_old
 
 
+    def getSalary(self):
+        return self.cheltuieli.salary
+    
+    def getFree(self):
+        return self.cheltuieli.free
+    
+    def getSpendingsTotal(self):
+        return self.cheltuieli.totalSpent
 
 main = Main()
 # main.initCategs()
@@ -411,7 +419,7 @@ print(main.cheltuieli.percentages_str())
 print(main.run("what does interest mean"))
 print(main.run("how much potassium do bananas have"))
 main.run("What s a good economy account")
-main.run("i want to buy a dior saddlebag")
-main.run("i want to buy the bag in 4 years")
+main.run("i a car")
+# main.run("i want to buy the car in 2")
 
 
