@@ -154,6 +154,11 @@ class Agents:
 
     def timeUntillPurchase(self, needed, monthly_savings):
         if((needed /( 12 * monthly_savings)) < 1):
+            if(needed / monthly_savings < 1):
+                if(needed / 30 * monthly_savings < 1):
+                    self.exists_object = False
+                    return "Your wishist item does not need financial planning\n"
+                return "{:.2f}".format(needed / 30 * monthly_savings) + " days"
             return "{:.2f}".format(needed / monthly_savings) + " months"
         return "{:.2f}".format(needed/(12 * monthly_savings)) + " years"
     # se poate expanda pe luni (telefoane )
@@ -304,9 +309,9 @@ class Main:
             self.price = (float)(output)
             # print(output)
             # print(f"free = {self.cheltuieli.free}")
+            self.exists_obiect = True
             print(f"{prompt}: Given you current finance plan you will be able to afford it in {self.agents.timeUntillPurchase(self.price, self.cheltuieli.free)}")
             # print(self.price)
-            self.exists_obiect = True
 
         elif option[0] == "4":
             print("I could not make any sense of your input")
