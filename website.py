@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 if 'ok' not in st.session_state:
     st.session_state.ok = 0
 if 'bots' not in st.session_state:
@@ -53,6 +54,7 @@ def stream_chat(messages):
 def main():
     logging.info("App started")
 
+
     st.markdown(
     """
     <style>
@@ -71,8 +73,8 @@ def main():
 
     st.sidebar.image("logo.svg")
     # model = st.sidebar.selectbox("Choose a model", ["mymodel", "llama3.2", "phi3", "mistral"])
-    # logging.info(f"Model selected: {model}")
 
+    # logging.info(f"Model selected: {model}")
 
     if prompt := st.chat_input("Your question"):
         st.session_state.messages.append({"role": "user", "content": prompt})
@@ -104,6 +106,11 @@ def main():
 
 
 if __name__ == "__main__":
+    st.set_page_config(
+        page_title="My Custom Tab Title",  # Change this to your desired title
+        page_icon=":star:",  # Optional: You can also set a page icon
+        layout="wide"  # Optional: You can set the layout to "wide" or "centered"
+    )
     if st.session_state.ok == 0:
         st.session_state.bots.initCategs()
         st.session_state.ok = 1
