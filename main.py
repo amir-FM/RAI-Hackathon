@@ -323,6 +323,10 @@ class Main:
     # print(whereCanISave(cheltuieli.percentages_str(), client))
 
     def run(self, input_text):
+
+        if input_text.content == "help":
+            return self.help()
+
         prompt = input_text
         option = self.agents.Master(prompt)
         print(option)
@@ -408,6 +412,17 @@ class Main:
     
     def getSpendingsTotal(self):
         return self.cheltuieli.totalSpent
+    
+
+
+    def help(self):
+        return """This chatbot has the following options:\n
+                   \t1. It can answer any type of financial question\n
+                   \t2. It can show you a piechart that shows you where your income goes monthly\n
+                   \t3. It can look up the price of any object and tell you in how much time you will be able to get it, based on your current financial behavior\n
+                   \t4. You can tell it in what time period you want the certain object and you will receive an adjustment to your financial behavior\n
+                   \t5. It can give you some safe economy funds that you can put your money in\n"""
+                    
 
 main = Main()
 # main.initCategs()
