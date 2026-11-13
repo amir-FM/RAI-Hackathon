@@ -2,6 +2,8 @@
 
 An intelligent, Streamlit-based web application that acts as your personal financial assistant. It ingests your bank transactions, categorizes your spending using Large Language Models (LLMs), visualizes your financial habits, and provides actionable advice for saving and investing.
 
+<img width="2307" height="1573" alt="Financial Advisor_page-0001" src="https://github.com/user-attachments/assets/5e4381ea-ac90-4db1-b977-e0b066e02637" />
+
 ## Features
 
 Based on the core agent logic, the chatbot supports the following capabilities:
